@@ -1,0 +1,15 @@
+# Core analysis / reporting dependencies (currently installed & used)
+pandas==3.0.6
+numpy==2.5.3
+matplotlib==3.11.2
+seaborn==0.13.2
+
+# Planned implementation-phase dependencies (baselines + metaheuristics)
+# Uncomment once you begin Phase 3–5 of the methodology.
+# scikit-learn
+# imbalanced-learn
+# xgboost
+# lightgbm
+# deap        # Genetic Algorithm
+# pyswarms    # Particle Swarm Optimization
+# joblib

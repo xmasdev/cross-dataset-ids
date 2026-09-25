@@ -1,0 +1,62 @@
+{
+  "cicids2017": {
+    "total_rows": 2830743,
+    "label_dist": {
+      "DDoS": 128027,
+      "BENIGN": 2273097,
+      "PortScan": 158930,
+      "Bot": 1966,
+      "Infiltration": 36,
+      "Web Attack \ufffd Brute Force": 1507,
+      "Web Attack \ufffd XSS": 652,
+      "Web Attack \ufffd Sql Injection": 21,
+      "FTP-Patator": 7938,
+      "SSH-Patator": 5897,
+      "DoS Hulk": 231073,
+      "DoS GoldenEye": 10293,
+      "DoS slowloris": 5796,
+      "DoS Slowhttptest": 5499,
+      "Heartbleed": 11
+    },
+    "feature_columns": 78,
+    "unique_features": 77,
+    "nan_cells": 1358,
+    "inf_cells": 4376
+  },
+  "unsw_nb15": {
+    "total_rows": 257673,
+    "attack_cat": {
+      "Normal": 93000,
+      "Generic": 58871,
+      "Exploits": 44525,
+      "Fuzzers": 24246,
+      "DoS": 16353,
+      "Reconnaissance": 13987,
+      "Analysis": 2677,
+      "Backdoor": 2329,
+      "Shellcode": 1511,
+      "Worms": 174
+    },
+    "feature_columns": 42,
+    "nan_cells": 0,
+    "inf_cells": 0
+  },
+  "ton_iot": {
+    "total_rows": 211043,
+    "type": {
+      "normal": 50000,
+      "backdoor": 20000,
+      "ddos": 20000,
+      "dos": 20000,
+      "injection": 20000,
+      "password": 20000,
+      "ransomware": 20000,
+      "scanning": 20000,
+      "xss": 20000,
+      "mitm": 1043
+    },
+    "feature_columns": 42,
+    "nan_cells": 0,
+    "inf_cells": 0
+  }
+}
