@@ -9,17 +9,22 @@ network environments.
 
 ```
 .
-├── reports/                     # Project documentation (mid-semester review set)
-│   ├── 00_README.md             # Index + quick facts
+├── reports/                     # Project documentation
+│   ├── 00_README.md             # Index of the document set
 │   ├── 01_dataset_report.md     # Dataset analysis
-│   ├── 02_literature_review.md  # Literature review (~33 papers)
+│   ├── 02_literature_review.md  # Literature review (15 focused papers)
 │   ├── 03_objectives_and_gaps.md# Research gap + objectives + scope
 │   ├── 04_methodology_and_plan.md# 7-phase methodology & plan
+│   ├── 05_midsem_report.md      # Mid-semester report (signable)
+│   ├── 06_presentation.md       # Presentation (20 slides) + .pptx/.pdf
+│   ├── 07_what_we_are_doing.md  # Plain-language team explainer
+│   ├── 08_viva_qa_prep.md       # Likely viva questions + answers
 │   ├── figures/                 # Charts embedded in the reports
 │   └── *.docx / *.pdf           # Exported versions of each report
 ├── src/
 │   ├── analyze_datasets.py      # Computes dataset statistics from raw CSVs
-│   ├── generate_report_assets.py# Regenerates stats JSON + all figures
+│   ├── generate_report_assets.py# Regenerates stats JSON + class-distribution figures
+│   ├── generate_extra_figures.py# Pipeline, Gantt and shared-subspace figures
 │   └── dataset_stats.json       # Measured statistics (rows, classes, NaN/Inf)
 ├── requirements.txt
 └── README.md
@@ -59,6 +64,7 @@ Start with `reports/03_objectives_and_gaps.md` (why), then `reports/01_dataset_r
 
 ## Status
 
-Mid-semester review: dataset analysis, literature review, research gaps, objectives, and
-detailed plan complete. Implementation (baselines → metaheuristic feature selection → analysis)
-in progress.
+Mid-semester review: dataset analysis, a focused literature review (15 papers), research gaps,
+objectives, a detailed plan, the **mid-semester report**, a **20-slide presentation**, a
+plain-language explainer, and a viva Q&A guide are complete. Implementation (baselines →
+metaheuristic feature selection → analysis) is in progress.

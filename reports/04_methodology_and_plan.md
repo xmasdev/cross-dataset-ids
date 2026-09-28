@@ -83,7 +83,7 @@ contribution in itself.
 3. **Metrics:** balanced accuracy, macro-F1, per-class F1, and ROC-AUC (binary); report
    mean ± std over ≥5 random seeds.
 4. **Output:** the full 3×3 source→target heatmaps (one per model/metric). This reproduces and
-   extends [4], [5].
+   extends [1], [2].
 
 **Hypothesis to confirm:** same-dataset ≈ 0.97–0.99 F1; cross-dataset drops sharply, often
 near chance, and the drop is asymmetric across pairs.
@@ -163,7 +163,7 @@ the best same-size standard-FS subset?
 3. **Domain-shift visualisation:** t-SNE/UMAP of the shared subspace coloured by dataset to
    visualise the distribution gap before/after feature selection.
 4. **Ablations:** (a) with vs without leakage features; (b) balanced vs natural class
-   distribution (replicating the protocol-sensitivity finding of [6]); (c) number of selected
+   distribution (replicating the protocol-sensitivity finding of [3]); (c) number of selected
    features vs cross-dataset F1.
 
 ## 9. Phase 7 — Guidelines & Reporting
@@ -182,7 +182,7 @@ Consolidate into the final report and a short guideline sheet.
 |---|---|---|
 | 1–2 | P1 | Cleaned, cached matrices + data dictionary |
 | 3–4 | P2 | Shared feature subspace + alignment spec |
-| 5–6 | P3 | Baseline 3×3 cross-dataset matrix (reproduce [4]/[5]) |
+| 5–6 | P3 | Baseline 3×3 cross-dataset matrix (reproduce [1]/[2]) |
 | 7–9 | P4 | GA/PSO/DE transfer-oriented FS running |
 | 10–11 | P5 | Standard-FS comparison complete |
 | 12–13 | P6 | Feature/class transfer analysis + ablations |
@@ -197,4 +197,4 @@ Consolidate into the final report and a short guideline sheet.
 
 ## 12. References
 
-Numbered as in `02_literature_review.md`; see [4], [5], [6], [9]–[13], [23].
+Numbered as in `02_literature_review.md`; see [1], [2], [3], [8]–[12].

@@ -49,7 +49,7 @@ All figures referenced in this document are stored under `reports/figures/`.
 
 ### 3.1 Provenance and collection methodology
 
-CIC-IDS-2017 [1] is the most widely used intrusion-detection benchmark. It was captured at
+CIC-IDS-2017 [5] is the most widely used intrusion-detection benchmark. It was captured at
 the Canadian Institute for Cybersecurity over five working days (Monday–Friday, July 2017)
 on a realistic testbed that emulated a small enterprise network: victim machines, a firewall,
 and an attacker network. Realistic background (benign) traffic was generated with a
@@ -100,7 +100,7 @@ characteristics:
 - The only categorical column is `Label`.
 - The first column `Destination Port` is a *de-facto identity feature* (see §6): it encodes
   the attack scenario rather than traffic behaviour and is a known source of inflated
-  same-dataset accuracy [4], [22].
+  same-dataset accuracy [1], [15].
 
 ### 3.4 Data-quality issues (measured)
 
@@ -117,7 +117,7 @@ characteristics:
 CIC-IDS-2017 provides rich flow statistics, but (i) its port/identity features, (ii) its
 extreme imbalance, and (iii) its non-finite values make it the dataset most prone to giving a
 *falsely high* same-dataset score that fails to transfer. This is exactly the behaviour
-documented in [4].
+documented in [1].
 
 ---
 
@@ -125,7 +125,7 @@ documented in [4].
 
 ### 4.1 Provenance and collection methodology
 
-UNSW-NB15 [2] was produced at the ACCS (UNSW Canberra) in 2015 using the **IXIA
+UNSW-NB15 [6] was produced at the ACCS (UNSW Canberra) in 2015 using the **IXIA
 PerfectStorm** traffic generator to emulate nine modern attack families (Fuzzers, Analysis,
 Backdoors, DoS, Exploits, Generic, Reconnaissance, Shellcode, Worms) alongside realistic
 background traffic. Features were extracted with the **Argus** tool augmented by **Bro-IDS**
@@ -158,7 +158,7 @@ Key observations:
 42 features, a mix of numeric counters and a few categoricals (`proto`, `service`, `state`).
 The `ct_*` features (e.g. `ct_srv_src`, `ct_dst_ltm`) count how many of the last 100
 connections share the same service/host/port — these are **temporal-window aggregations that
-depend on the collection window** and are a known source of non-transferable signal [4], [6].
+depend on the collection window** and are a known source of non-transferable signal [1], [3].
 Two timestamp columns (`stime`, `ltime`) are absent in this variant.
 
 ### 4.4 Data quality
@@ -173,7 +173,7 @@ time-dependent and leak collection-order information.
 
 ### 5.1 Provenance and collection methodology
 
-TON_IoT [3], [28] is a heterogeneous IoT/IIoT dataset collected from a three-layer testbed
+TON_IoT [7] is a heterogeneous IoT/IIoT dataset collected from a three-layer testbed
 (edge, fog, cloud) orchestrated with SDN (VMware NSX) and NFV. The network portion contains
 traffic from IoT sensors and hosts, with attacks in ten families. Network features are the
 **raw Zeek (Bro) connection-log fields** — a fundamentally different feature philosophy from
@@ -258,7 +258,7 @@ the feature can be constructed in all three datasets directly.
 (duration, src/dst bytes, src/dst packets, plus proto/service/state after encoding). After
 one-hot encoding protocol/service/state and deriving rate-like ratios, this expands to
 roughly **15–25 comparable dimensions**. This is consistent with prior cross-dataset work
-that deliberately restricts to a common representation [4], [6], [7] — and it is the feature
+that deliberately restricts to a common representation [1], [3], [4] — and it is the feature
 set our metaheuristic optimiser will search over.
 
 ### 6.3 Class-taxonomy mapping (binary + coarse multi-class)
@@ -303,25 +303,26 @@ generalisation gap (Objective 2 of the project).
 
 ## References
 
-[1] I. Sharafaldin, A. H. Lashkari, and A. A. Ghorbani, "Toward generating a new intrusion
-detection dataset and intrusion traffic characterization," in *Proc. 4th Int. Conf. Inf.
-Syst. Secur. Privacy (ICISSP)*, 2018.
+> Reference numbers follow the canonical 15-paper list in `02_literature_review.md` and
+> `05_midsem_report.md`.
 
-[2] N. Moustafa and J. Slay, "UNSW-NB15: a comprehensive data set for network intrusion
-detection systems (UNSW-NB15 network data set)," in *Proc. Mil. Commun. Inf. Syst. Conf.
-(MilCIS)*, 2015.
-
-[3] N. Moustafa, "A new distributed architecture for evaluating AI-based security systems at
-the edge: Network TON_IoT datasets," *Sustain. Cities Soc.*, vol. 72, 2021.
-
-[4] M. Cantone, C. Marrocco, and A. Bria, "On the cross-dataset generalization of machine
+[1] M. Cantone, C. Marrocco, and A. Bria, "On the cross-dataset generalization of machine
 learning for network intrusion detection," *IEEE Access*, vol. 12, pp. 144489–144508, 2024.
 
-[6] M. A. Hakim, M. S. Uddin, and T. I. Anis, "Cross-domain generalization failure in
+[3] M. A. Hakim, M. S. Uddin, and T. I. Anis, "Cross-domain generalization failure in
 lightweight intrusion detection models for IIoT networks," arXiv:2607.00553, 2026.
 
-[22] J. Vitorino, M. Silva, E. Maia, and I. Praça, "An adversarial robustness benchmark for
-enterprise network intrusion detection," in *Proc. FPS*, 2023.
+[4] M. U. Butt, A. Hotho, and D. Schlör, "Evaluating tabular representation learning for
+network intrusion detection," in *Proc. IEEE CSR*, 2026.
 
-[28] N. Moustafa, M. Keshk, E. Debie, and H. Janicke, "Federated TON_IoT Windows datasets
-for evaluating AI-based security applications," arXiv:2010.08522, 2020.
+[5] I. Sharafaldin, A. H. Lashkari, and A. A. Ghorbani, "Toward generating a new intrusion
+detection dataset and intrusion traffic characterization," in *Proc. ICISSP*, 2018.
+
+[6] N. Moustafa and J. Slay, "UNSW-NB15: a comprehensive data set for network intrusion
+detection systems (UNSW-NB15 network data set)," in *Proc. MilCIS*, 2015.
+
+[7] N. Moustafa, "A new distributed architecture for evaluating AI-based security systems at
+the edge: Network TON_IoT datasets," *Sustain. Cities Soc.*, vol. 72, 2021.
+
+[15] J. Vitorino, M. Silva, E. Maia, and I. Praça, "An adversarial robustness benchmark for
+enterprise network intrusion detection," in *Proc. FPS*, 2023.

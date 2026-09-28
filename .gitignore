@@ -16,3 +16,6 @@ _zip datasets/
 *.pkl
 *.joblib
 results/
+
+# University-provided sample evaluation (contains another group's details)
+sample_midsem_eval.pdf
