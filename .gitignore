@@ -15,7 +15,7 @@ _zip datasets/
 *.parquet
 *.pkl
 *.joblib
-results/
+results/harmonized_*.csv
 
 # University-provided sample evaluation (contains another group's details)
 sample_midsem_eval.pdf

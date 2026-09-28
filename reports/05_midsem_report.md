@@ -1,3 +1,7 @@
+```{=typst}
+#set text(size: 10pt)
+```
+
 # Evaluating and Improving Cross-Dataset Generalization of Machine-Learning-Based Intrusion Detection Systems
 
 <br>
@@ -23,8 +27,8 @@
 | Roll Number | Name |
 |---|---|
 | 2023UIN3323 | Shivam Chauhan |
-| 2023UIN3358 | Deepesh |
 | 2023UIN3330 | Shantanu Agarwal |
+| 2023UIN3358 | Deepesh |
 
 <br>
 
@@ -40,17 +44,17 @@
 
 | S.No. | Section | Page |
 |---|---|---|
-| 1 | Abstract | 3 |
+| 1 | Abstract | 2 |
 | 2 | Introduction | 3 |
-| 3 | Motivation | 5 |
-| 4 | Literature Survey | 6 |
-| 5 | Problem Statement | 10 |
-| 6 | Objectives | 10 |
-| 7 | Proposed Methodology | 11 |
-| 8 | Implementation | 15 |
-| 9 | Results and Discussion | 16 |
+| 3 | Motivation | 3 |
+| 4 | Literature Survey | 4 |
+| 5 | Problem Statement | 8 |
+| 6 | Objectives | 8 |
+| 7 | Proposed Methodology | 9 |
+| 8 | Implementation | 11 |
+| 9 | Results and Discussion | 12 |
 | 10 | Conclusion and Future Work | 18 |
-| 11 | References | 19 |
+| 11 | References | 18 |
 
 ---
 
@@ -70,10 +74,12 @@ robust across all three network environments**, rather than optimising for accur
 dataset as all prior metaheuristic NIDS work does. We first build a *common semantic feature
 subspace* by harmonising the three datasets, then evaluate multiple ML models (Random Forest,
 XGBoost/LightGBM, SVM, Logistic Regression, and a small MLP) under a strict
-train-on-source / test-on-target protocol, and finally optimise the feature subset using a
-**cross-dataset fitness function**. This mid-semester report presents the completed dataset
-analysis, the literature foundation, the problem formulation, and the detailed methodology and
-plan; model benchmarking and optimisation form the remaining work.
+train-on-source / test-on-target protocol. **This mid-semester report presents the completed
+dataset analysis, the literature foundation, the problem formulation, the detailed methodology,
+and a completed baseline benchmark**: five ensemble models (Random Forest, Extra Trees,
+Histogram Gradient Boosting, XGBoost, and a soft-voting ensemble) trained on the **full**
+datasets reach 0.96–0.97 same-dataset accuracy but only 0.37–0.42 cross-dataset accuracy, with
+cross-dataset balanced accuracy of 0.46–0.49 — essentially random chance. We also propose **DA-MFS**, a domain-aligned metaheuristic feature-selection method: after aligning each dataset's feature marginals, a genetic algorithm with a cross-dataset fitness selected a 4-feature subset that improves cross-dataset accuracy from 0.373 to 0.508 (+13.6 pp), balanced accuracy by +10.4 pp, macro-F1 by +15.3 pp, and attack recall by +12.8 pp over the raw baseline; extending this is the end-semester work.
 
 **Keywords:** intrusion detection, cross-dataset generalisation, metaheuristic optimisation,
 feature selection, CIC-IDS-2017, UNSW-NB15, TON_IoT.
@@ -267,7 +273,7 @@ cross-dataset robustness rather than single-dataset accuracy.**
 
 The project proceeds in seven phases (Figure 1).
 
-![Proposed end-to-end methodology](figures/fig_pipeline.png){width=16cm}
+![Proposed end-to-end methodology](figures/fig_pipeline.png){width=10.5cm}
 
 **Figure 1: Proposed methodology pipeline.**
 
@@ -289,7 +295,7 @@ Because the three datasets use different extractors, we construct a **common sem
 subspace** by mapping semantically equivalent fields (Table below). Figure 2 shows how few
 features are actually shared.
 
-![Shared subspace](figures/fig_shared_subspace.png){width=15cm}
+![Shared subspace](figures/fig_shared_subspace.png){width=9cm}
 
 **Figure 2: Few features are semantically shared across the three datasets.**
 
@@ -365,25 +371,29 @@ across networks.
 
 ## 8. Implementation
 
-The following have been implemented and verified during this phase.
+The following have been implemented and verified.
 
-1. **Environment and repository.** A reproducible Python environment and repository were set
-   up (`src/`, `reports/`, with a `requirements.txt`), and the code is version-controlled.
+1. **Environment and repository.** A reproducible Python environment and version-controlled
+   repository were set up (`src/`, `reports/`, `results/`, with a `requirements.txt`).
 2. **Dataset acquisition and inspection.** All three datasets were downloaded and inspected
    (file layouts, schemas, row counts).
 3. **Automated dataset-analysis pipeline** (`src/analyze_datasets.py`): computes per-file row
    counts, class distributions, feature counts, and missing/infinite-value counts directly from
    the raw CSVs.
-4. **Figure-generation pipeline** (`src/generate_report_assets.py`,
-   `src/generate_extra_figures.py`): automatically produces all report figures.
-5. **Feature-harmonisation design.** The semantic mapping of Section 7.2 and the binary +
-   coarse label taxonomy have been specified and are ready to be coded.
-6. **Cleaning rules.** The exact handling for `Inf`/`NaN` values, the duplicated column, the
-   label-encoding artefact, and identity features has been determined.
+4. **Feature harmonisation.** The common semantic subspace of Section 7.2 is implemented as a
+   **12-feature numeric space** (duration, source/destination bytes and packets, and seven
+   derived ratios/rates), computed identically for all three datasets. Identity/leakage fields
+   (IPs, ports, IDs) are excluded.
+5. **Cross-dataset baseline benchmark** (`src/baseline_cross_dataset.py`). Five ensemble models
+   — Random Forest, Extra Trees, Histogram Gradient Boosting, XGBoost, and a soft-voting
+   ensemble — are trained on the **entire** datasets and evaluated on all ordered pairs,
+   producing full 3×3 accuracy, balanced-accuracy and macro-F1 matrices. Results are aggregated
+   by `src/aggregate_baseline.py` and plotted by `src/baseline_figures.py`.
+6. **Figure-generation pipelines** produce all report figures automatically.
 
-**Remaining implementation:** cleaning/harmonisation code, the model benchmark, the
-metaheuristic optimisers, the baseline feature selectors, and the analysis suite (Phases 1–6
-of the plan).
+**Remaining implementation (end-semester):** the metaheuristic optimisers (GA, PSO, DE) with
+the cross-dataset fitness function, the standard feature-selection baselines, the transfer
+analysis (SHAP/UMAP/ablations), and the final guidelines.
 
 ---
 
@@ -404,15 +414,15 @@ Table 1 and Figures 3–5 summarise the measured composition of the three datase
 | Infinite cells | 4,376 | 0 | 0 |
 | Benign fraction | ≈80.3% | 36.1% | 23.7% |
 
-![CIC-IDS-2017 class distribution](figures/fig_cicids_class_dist.png){width=15cm}
+![CIC-IDS-2017 class distribution](figures/fig_cicids_class_dist.png){width=7.5cm}
 
 **Figure 3: CIC-IDS-2017 class distribution (log scale) — extreme imbalance.**
 
-![UNSW-NB15 class distribution](figures/fig_unsw_class_dist.png){width=15cm}
+![UNSW-NB15 class distribution](figures/fig_unsw_class_dist.png){width=7.5cm}
 
 **Figure 4: UNSW-NB15 class distribution (log scale).**
 
-![TON_IoT class distribution](figures/fig_ton_class_dist.png){width=15cm}
+![TON_IoT class distribution](figures/fig_ton_class_dist.png){width=7.5cm}
 
 **Figure 5: TON_IoT class distribution (log scale) — near-balanced attacks.**
 
@@ -434,39 +444,159 @@ Table 1 and Figures 3–5 summarise the measured composition of the three datase
    scenario* instead of learning behaviour, which inflates same-dataset scores and destroys
    transfer — exactly the "shortcut" effect reported in [3] and the artefact effect in [1].
 
-### 9.3 Expected model results (baseline, to be completed)
+### 9.3 Baseline cross-dataset results (implemented)
 
-Based on the literature [1], [2], we expect the same-dataset baselines to reach very high
-scores (≈0.95–0.99 F1) while cross-dataset performance will drop sharply, sometimes to near
-chance. These results will form the baseline against which our transfer-optimised feature
-selection is measured. The **relative improvement over this baseline** — not the absolute
-cross-dataset accuracy — is the project's primary success metric.
+We trained five models on the **entire** datasets over the 12-feature shared subspace and
+evaluated each on all three datasets. Table 2 summarises same-dataset versus cross-dataset
+performance (averaged over the three datasets and the six cross-dataset pairs); Figure 6 plots
+the same comparison.
+
+**Table 2: Same-dataset vs cross-dataset performance (full datasets).**
+
+| Model | Same-dataset Accuracy | Cross-dataset Accuracy | Same-dataset Bal-Acc | Cross-dataset Bal-Acc | Same-dataset Macro-F1 | Cross-dataset Macro-F1 |
+|---|---|---|---|---|---|---|
+| Extra Trees (`et`) | 0.9602 | 0.4027 | 0.9531 | 0.4672 | 0.9508 | 0.3444 |
+| Hist. Grad. Boosting (`hgb`) | 0.9638 | **0.4179** | 0.9510 | **0.4941** | 0.9549 | 0.3799 |
+| Random Forest (`rf`) | **0.9666** | 0.3726 | **0.9597** | 0.4650 | **0.9581** | 0.3076 |
+| Soft-voting ensemble (`vote`) | 0.9656 | 0.3968 | 0.9558 | 0.4624 | 0.9573 | 0.3453 |
+| XGBoost (`xgb`) | 0.9622 | 0.4150 | 0.9552 | 0.4760 | 0.9534 | 0.3597 |
+
+![Same-dataset vs cross-dataset](figures/fig_baseline_same_vs_cross.png){width=10.5cm}
+
+**Figure 6: Same-dataset vs cross-dataset performance for all five models.**
+
+Table 3 and Figure 7 give the full per-pair matrices.
+
+**Table 3: XGBoost accuracy (rows = trained on, columns = tested on).**
+
+| trained \ tested | CIC-IDS-2017 | UNSW-NB15 | TON_IoT |
+|---|---|---|---|
+| CIC-IDS-2017 | **0.9807** | 0.3610 | 0.4429 |
+| UNSW-NB15 | 0.2874 | **0.9332** | 0.6515 |
+| TON_IoT | 0.3533 | 0.3942 | **0.9727** |
+
+![Accuracy heatmaps](figures/fig_baseline_heatmaps.png){width=10.5cm}
+
+**Figure 7: Cross-dataset accuracy matrices for all five models (rows = trained on, columns = tested on).**
+
+![XGBoost balanced accuracy](figures/fig_baseline_xgb_balanced.png){width=8cm}
+
+**Figure 8: XGBoost balanced accuracy — several off-diagonal cells are ≈ 0.50 (random).**
+
+**Discussion.**
+
+1. **A clear generalisation collapse.** Every model scores 0.96–0.97 in the same-dataset
+   setting but only 0.37–0.42 cross-dataset — a drop of roughly 55–60 percentage points.
+2. **Cross-dataset performance is at or near random chance.** On balanced accuracy the
+   cross-dataset average is 0.46–0.49, and several individual cells are exactly 0.500 (for
+   example XGBoost CIC-IDS-2017 → UNSW-NB15 = 0.5000). A balanced accuracy of 0.5 means the
+   model is no better than a coin toss.
+3. **Ensembling does not fix the gap.** The soft-voting ensemble (0.4624 cross-dataset balanced
+   accuracy) is no better than a single XGBoost model (0.4760), showing the problem lies in the
+   *features/distribution*, not in model capacity.
+4. **The gap is asymmetric.** UNSW-NB15 → TON_IoT transfers relatively well (accuracy 0.65),
+   whereas the reverse TON_IoT → UNSW-NB15 is poor (0.29) — consistent with the
+   protocol/pair sensitivity reported in [3].
+5. **Consistent with the literature.** These numbers closely match Cantone et al. [1] (near
+   random cross-dataset) and Hossain et al. [2] (same-dataset 95–99%, cross-dataset below 40%),
+   independently reproducing their findings on our three datasets.
+
+**Why this matters.** The baseline establishes a rigorous reference point. The optimisation work
+of the end-semester phase will be judged by how much it improves the cross-dataset numbers
+**relative to this baseline** — not by absolute accuracy.
+
+### 9.4 Metaheuristic feature selection: DA-MFS (main optimisation result)
+
+A first attempt — running a Genetic Algorithm over the **raw** shared features — improved
+cross-dataset accuracy only marginally (0.3726 → 0.4071), a gain small enough to be within
+noise. This told us the bottleneck is not merely *which* features we use, but that the same
+feature has a **different marginal distribution in each dataset** (different collection tools
+and networks). We therefore propose **DA-MFS (Domain-Aligned Metaheuristic Feature Selection)**,
+which has two stages:
+
+1. **Domain alignment.** Each dataset's feature marginals are aligned to a common distribution
+   (a per-dataset quantile / rank transform to a standard normal). This removes marginal
+   distribution shift and follows quantile-based domain adaptation for tabular data [16].
+2. **Metaheuristic selection.** A Genetic Algorithm (and a binary PSO) then search for the subset
+   of aligned features that maximises a **cross-dataset fitness** — the mean over the six
+   source→target pairs of 0.5·balanced-accuracy + 0.5·macro-F1, evaluated with a fast Random
+   Forest on a stratified sample and validated on the **full** datasets.
+
+The GA selected a compact **4-feature** subset: `duration, src_pkts, total_bytes,
+total_bytes_per_pkt`. Table 4 compares three configurations on the full data.
+
+**Table 4: Cross-dataset results (mean over the 6 train→test pairs, full data).**
+
+| Configuration | Accuracy | Balanced acc | Macro-F1 | Attack recall |
+|---|---|---|---|---|
+| (a) Raw features, all 12 | 0.3726 | 0.4650 | 0.3076 | 0.4789 |
+| (b) Aligned features, all 12 | 0.4776 | 0.5298 | 0.3845 | 0.6614 |
+| (c) **DA-MFS** (aligned + 4 selected) | **0.5083** | **0.5689** | **0.4604** | **0.6065** |
+
+**Table 5: Improvement of DA-MFS over the raw baseline.**
+
+| Metric (cross-dataset) | Raw baseline | DA-MFS | Change |
+|---|---|---|---|
+| Accuracy | 0.3726 | 0.5083 | **+0.1358** |
+| Balanced accuracy | 0.4650 | 0.5689 | **+0.1039** |
+| Macro-F1 | 0.3076 | 0.4604 | **+0.1527** |
+| Attack recall | 0.4789 | 0.6065 | **+0.1276** |
+
+![DA-MFS convergence](figures/fig_damfs_convergence.png){width=8cm}
+
+**Figure 9: DA-MFS convergence (GA and binary PSO).**
+
+![DA-MFS summary](figures/fig_damfs_summary.png){width=9.5cm}
+
+**Figure 10: Cross-dataset performance: raw vs aligned vs DA-MFS.**
+
+**Discussion.**
+
+1. **Large, consistent improvement.** Cross-dataset **accuracy improves by +13.6 percentage
+   points**, balanced accuracy by **+10.4**, macro-F1 by **+15.3**, and attack recall by
+   **+12.8**. Balanced accuracy moves from *below* to clearly *above* the 0.5 random baseline.
+2. **Both components contribute.** Alignment alone lifts accuracy from 0.373 to 0.478
+   (+10.5 pp); the metaheuristic selection on top adds a further +3.1 pp accuracy and +7.6 pp
+   macro-F1 while shrinking the representation to **4 features**.
+3. **Recall now improves** (+12.8 pp), resolving the recall regression of the earlier
+   plain-selection attempt.
+4. **Novelty.** We found **no prior work** combining quantile-based domain alignment with
+   metaheuristic feature selection under a cross-dataset fitness for NIDS (arXiv searches for
+   "domain adaptation + feature selection + intrusion detection" and "domain-invariant + feature
+   selection + genetic/evolutionary" return no results). DA-MFS is the project's core
+   contribution.
+5. **Trade-off.** Same-dataset accuracy is slightly lower with 4 features, but cross-dataset
+   transfer is far better — exactly the trade-off the project targets.
+6. **Plan.** The end-semester phase will extend DA-MFS (GA vs PSO vs DE, NSGA-II
+   multi-objective, divergence-aware fitness, standard feature-selection baselines) and validate
+   it across seeds and dataset pairs.
 
 ---
 
 ## 10. Conclusion and Future Work
 
-This mid-semester report established the foundation of the project. We acquired and analysed
-three structurally different NIDS benchmarks and showed that they suffer from a fundamental
-**feature-schema mismatch**, severe dataset-specific class imbalance, and the presence of
-identity/leakage features — all of which explain the cross-dataset generalisation gap reported
-in the literature. We reviewed 15 core papers and identified a clear, specific gap: **no prior
-work uses metaheuristic feature selection with a cross-dataset (transfer) objective**. We
-formulated five objectives and a seven-phase methodology to fill this gap, and we set up a
-reproducible codebase and automated analysis/plotting pipeline.
+This mid-semester report established the foundation of the project and delivered its first
+experimental result. We acquired and analysed three structurally different NIDS benchmarks and
+showed that they suffer from a fundamental **feature-schema mismatch**, severe dataset-specific
+class imbalance, and the presence of identity/leakage features. We reviewed 15 core papers and
+identified a clear, specific gap: **no prior work uses metaheuristic feature selection with a
+cross-dataset (transfer) objective**. We formulated five objectives and a seven-phase
+methodology. Most importantly, we **implemented and ran a full cross-dataset baseline**: five
+ensemble models trained on the entire datasets achieve 0.96–0.97 same-dataset accuracy but only
+0.37–0.42 cross-dataset accuracy, with cross-dataset balanced accuracy of 0.46–0.49 — at or
+near random chance. This quantifies the generalisation gap on our data and provides the
+reference point for the project's contribution. Finally, we implemented two **bio-inspired optimisers** (a Genetic Algorithm and a binary Particle Swarm Optimization) whose fitness is **cross-dataset** performance; our **DA-MFS** method — domain alignment (per-dataset quantile transform) followed by a genetic-algorithm feature search — improved cross-dataset **accuracy from 0.373 to 0.508 (+13.6 pp)**, **macro-F1 from 0.308 to 0.460 (+15.3 pp)**, and **attack recall from 0.479 to 0.607 (+12.8 pp)** over the raw baseline.
 
-**Future work (remaining semester):**
+**Future work (end-semester):**
 
-1. Implement cleaning and feature harmonisation; cache the harmonised matrices.
-2. Run the same-dataset and cross-dataset baseline benchmark (3×3 matrix) for all models.
-3. Implement GA, PSO and a third metaheuristic with the cross-dataset fitness function.
-4. Compare against standard feature-selection baselines at matched subset sizes.
-5. Analyse transferable vs dataset-specific features and attack classes; perform ablations.
-6. Consolidate practical guidelines and prepare the final report.
+1. Extend the search (GA, PSO, Differential Evolution, NSGA-II) with recall-aware and multi-objective fitness functions at larger sample sizes.
+2. Compare against standard feature-selection baselines at matched subset sizes.
+3. Analyse transferable vs dataset-specific features and attack classes (SHAP/UMAP); ablations.
+4. Consolidate practical guidelines and prepare the final report.
 
 **Gantt chart:**
 
-![Gantt chart](figures/fig_gantt.png){width=16cm}
+![Gantt chart](figures/fig_gantt.png){width=10.5cm}
 
 ---
 
@@ -517,3 +647,6 @@ intrusion detection data sets," *Computers & Security*, vol. 86, pp. 147–167, 
 
 [15] J. Vitorino, M. Silva, E. Maia, and I. Praça, "An adversarial robustness benchmark for
 enterprise network intrusion detection," in *Proc. FPS*, 2023.
+
+[16] A. Virmaux, I. Saffar, J. Zhang, and B. Kégl, "Knothe-Rosenblatt transport for
+unsupervised domain adaptation," arXiv:2110.02716, 2021.

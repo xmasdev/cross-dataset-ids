@@ -1,14 +1,7 @@
 ---
 title: "Evaluating and Improving Cross-Dataset Generalization of Machine-Learning-Based Intrusion Detection Systems"
 subtitle: "B.Tech. Project – I | Mid-Semester Evaluation"
-author: |
-  | Under the supervision of **Dr. Preeti Bansal**
-  |
-  | **Shivam Chauhan** (2023UIN3323)
-  | **Deepesh** (2023UIN3358)
-  | **Shantanu Agarwal** (2023UIN3330)
-  |
-  | Department of Information Technology, NSUT, New Delhi
+author: "Shivam Chauhan (2023UIN3323) · Shantanu Agarwal (2023UIN3330) · Deepesh (2023UIN3358) — Supervisor: Dr. Preeti Bansal | Dept. of Information Technology, NSUT"
 date: "30 September 2026"
 ---
 
@@ -31,10 +24,11 @@ date: "30 September 2026"
 10. Metaheuristic Feature Selection
 11. Evaluation Protocol & Baselines
 12. Implementation & Progress
-13. Results & Discussion
-14. Gantt Chart
-15. Conclusion & Future Work
-16. References
+13. Baseline Cross-Dataset Results
+14. DA-MFS (Optimisation Result)
+15. Gantt Chart
+16. Conclusion & Future Work
+17. References
 
 ```{=typst}
 #pagebreak()
@@ -237,36 +231,68 @@ fitness(mask) = average  balanced-accuracy / macro-F1
 **Completed**
 
 - Reproducible Python environment + version-controlled repository.
-- All three datasets downloaded and inspected.
-- Automated **dataset-analysis pipeline** (rows, class distributions, NaN/Inf counts).
-- Automated **figure-generation pipeline** for all report charts.
-- Feature-harmonisation mapping and label taxonomy specified.
-- Cleaning rules for Inf/NaN, duplicated column, label-encoding artefact, identity features.
+- All three datasets downloaded and analysed; figures generated automatically.
+- **Shared 12-feature subspace implemented** (identity/leakage features removed).
+- **Cross-dataset baseline benchmark: 5 ensemble models trained on the full datasets**, evaluated on all pairs → 3×3 matrices.
 
-**In progress / next**
+**Next (end-semester)**
 
-- Cleaning & harmonisation code; cached harmonised matrices.
-- Cross-dataset model benchmark.
-- GA/PSO/DE optimisers + baseline feature selectors.
+- GA / PSO / DE optimisers with the cross-dataset fitness function.
+- Standard feature-selection baselines (MI, RF-importance, PCA, RFE, LASSO).
+- Transfer analysis (SHAP/UMAP, ablations) and practical guidelines.
 
 ```{=typst}
 #pagebreak()
 ```
 
-# Results & Discussion (dataset analysis)
+# Baseline Cross-Dataset Results
 
-**Measured findings so far**
+- Trained **5 ensemble models on the full datasets**; tested on all three (3×3 matrix).
+- Same-dataset accuracy **0.96–0.97**; cross-dataset only **0.37–0.42**.
+- Cross-dataset **balanced accuracy 0.46–0.49 → at/near random chance (0.50)**.
 
-- CIC-IDS-2017: 2,830,743 flows, **80.3% benign**, 4,376 Inf + 1,358 NaN cells, one duplicated column.
-- UNSW-NB15: 257,673 records, 9 attack classes + Normal.
-- TON_IoT: 211,043 records, **near-balanced** attack classes (20,000 each, except MITM 1,043).
-- **Schema mismatch:** no shared column names; only ~6 raw features semantically common.
+![Same-dataset vs cross-dataset](figures/fig_baseline_same_vs_cross.png){width=14cm}
 
-**Discussion**
+```{=typst}
+#pagebreak()
+```
 
-- **Overall accuracy is misleading** → we use balanced accuracy and macro-F1.
-- **Identity/port features inflate same-dataset scores** and destroy transfer [1], [3].
-- Baseline model benchmarking (expected: high same-dataset, near-chance cross-dataset) is the next step.
+# Baseline Results — Key Findings
+
+| Model | Same-dataset Acc | Cross-dataset Acc | Cross-dataset Bal-Acc |
+|---|---|---|---|
+| Random Forest (`rf`) | **0.9666** | 0.3726 | 0.4650 |
+| XGBoost (`xgb`) | 0.9622 | 0.4150 | 0.4760 |
+| Hist. Grad. Boosting (`hgb`) | 0.9638 | **0.4179** | **0.4941** |
+| Extra Trees (`et`) | 0.9602 | 0.4027 | 0.4672 |
+| Soft-voting (`vote`) | 0.9656 | 0.3968 | 0.4624 |
+
+- XGBoost CIC-IDS-2017 → UNSW-NB15 balanced accuracy = **0.5000 (exactly random)**.
+- **Ensembling does NOT fix the gap** → the problem is the features/distribution, not model capacity.
+- Independently matches the literature [1], [2]; motivates transfer-oriented optimisation.
+
+```{=typst}
+#pagebreak()
+```
+
+# DA-MFS — Domain-Aligned Metaheuristic Feature Selection
+
+- **Why plain selection fails:** the same feature has a *different distribution* in each dataset.
+- **Stage 1 — Domain alignment:** align each dataset's feature marginals (per-dataset quantile transform → normal).
+- **Stage 2 — Metaheuristic:** GA / binary PSO search a feature subset with a **cross-dataset fitness** (mean balanced-accuracy + macro-F1 over 6 pairs).
+- **Novelty:** no prior work couples domain alignment with metaheuristic feature selection for NIDS.
+
+| Cross-dataset metric | Raw baseline | **DA-MFS** | Change |
+|---|---|---|---|
+| Accuracy | 0.373 | **0.508** | **+0.136** |
+| Balanced accuracy | 0.465 | **0.569** | **+0.104** |
+| Macro-F1 | 0.308 | **0.460** | **+0.153** |
+| Attack recall | 0.479 | **0.607** | **+0.128** |
+
+![Raw vs aligned vs DA-MFS](figures/fig_damfs_summary.png){width=10.5cm}
+
+- Compact **4-feature** subset; **+13.6 pp accuracy and +12.8 pp recall** — a clear, defensible gain.
+- Next: GA vs PSO vs DE, NSGA-II multi-objective, divergence-aware fitness, standard FS baselines.
 
 ```{=typst}
 #pagebreak()
@@ -286,16 +312,15 @@ fitness(mask) = average  balanced-accuracy / macro-F1
 
 - Three structurally different benchmarks analysed; **feature-schema mismatch** is the root cause of cross-dataset failure.
 - Literature review (15 core papers) confirms a clear gap: no transfer-optimised metaheuristic feature selection for NIDS.
-- Objectives and a seven-phase methodology defined; codebase and tooling set up.
+- **Baseline quantified the gap:** 0.96–0.97 same-dataset vs 0.37–0.42 cross-dataset (balanced accuracy ≈ random chance).
+- **DA-MFS optimisation works:** domain alignment + evolutionary feature selection lifts cross-dataset accuracy **0.373 → 0.508** and recall **0.479 → 0.607**.
 
 **Future work**
 
-1. Cleaning & feature harmonisation.
-2. Cross-dataset baseline benchmark (3×3 matrix).
-3. GA / PSO / DE transfer-oriented feature selection.
-4. Comparison vs. standard feature-selection baselines.
-5. Analysis of transferable features/attacks + ablations.
-6. Practical guidelines and final report.
+1. Extend DA-MFS (GA / PSO / DE / NSGA-II, divergence-aware fitness).
+2. Comparison vs. standard feature-selection baselines.
+3. Analysis of transferable features/attacks + ablations.
+4. Practical guidelines and final report.
 
 ```{=typst}
 #pagebreak()
@@ -324,17 +349,3 @@ fitness(mask) = average  balanced-accuracy / macro-F1
 [14] Ring et al., "A survey of network-based intrusion detection data sets," *Computers & Security*, 2019.
 
 [15] Vitorino et al., "An adversarial robustness benchmark for enterprise NIDS," *FPS*, 2023.
-
-```{=typst}
-#pagebreak()
-```
-
-# Thank You
-
-**Questions?**
-
-Evaluating and Improving Cross-Dataset Generalization of ML-Based Intrusion Detection Systems
-
-Shivam Chauhan · Deepesh · Shantanu Agarwal
-
-Under the supervision of Dr. Preeti Bansal, Department of IT, NSUT

@@ -251,6 +251,51 @@
 
 ---
 
+## G2. Our own results (be ready to defend these)
+
+**Q. What did your baseline show?**
+> We trained five ensemble models (Random Forest, Extra Trees, Histogram Gradient Boosting,
+> XGBoost, soft-voting) on the **full** datasets. Same-dataset accuracy was **0.96–0.97**, but
+> cross-dataset was only **0.37–0.42**, with balanced accuracy **0.46–0.49 — essentially random**.
+> XGBoost trained on CIC-IDS-2017 and tested on UNSW-NB15 had balanced accuracy exactly
+> **0.5000**. This reproduces Cantone et al. [1] and Hossain et al. [2].
+
+**Q. What is your metaheuristic approach, and what did it achieve?**
+> Our method is **DA-MFS (Domain-Aligned Metaheuristic Feature Selection)**. First we align each
+> dataset's feature distributions (a per-dataset quantile/rank transform to a standard normal) to
+> remove distribution shift. Then a Genetic Algorithm (and a binary PSO) search for a feature
+> subset that maximises a **cross-dataset fitness** (mean of balanced accuracy and macro-F1 over
+> the six train→test pairs). The GA selected a **4-feature** subset and, on the full data,
+> improved cross-dataset **accuracy from 0.373 to 0.508 (+13.6 pp)**, **balanced accuracy by
+> +10.4 pp**, **macro-F1 by +15.3 pp**, and **attack recall by +12.8 pp** over the raw baseline.
+
+**Q. Why did plain feature selection only give a small gain?**
+> Because features from different datasets have different *marginal distributions* even when they
+> are semantically the same. Selecting features does not fix that. Alignment does: alignment alone
+> raised accuracy from 0.373 to 0.478; the metaheuristic added a further +3.1 pp accuracy and
+> +7.6 pp macro-F1 while shrinking the representation to 4 features.
+
+**Q. Is DA-MFS novel?**
+> Yes. We found **no prior work** combining quantile-based domain alignment with metaheuristic
+> feature selection under a cross-dataset fitness for NIDS (arXiv queries for "domain adaptation +
+> feature selection + intrusion detection" and "domain-invariant + feature selection +
+> genetic/evolutionary" return no results). Quantile/rank transport is used in tabular domain
+> adaptation (KRDA), but not with evolutionary feature selection for IDS.
+
+**Q. Why optimise on a sample and evaluate on the full data?**
+> Each fitness evaluation trains a model; doing that thousands of times on 2.83M rows is
+> intractable. We optimise on a stratified **20,000-row sample per dataset** and validate the
+> winning subset on the **full** datasets — the full-data numbers are what we report.
+
+**Q. Why does attack recall now improve?**
+> The DA-MFS fitness averages balanced accuracy and macro-F1, both of which reward recall, and the
+> aligned features remove the distribution artefacts that made recall unstable. Recall rises from
+> 0.479 to 0.607.
+
+**Q. Did GA beat PSO?**
+> On the aligned sample, GA reached fitness **0.551** vs PSO **0.545**, so we used the GA subset.
+> A fuller comparison across seeds and objectives is part of the end-semester work.
+
 ## H. Tough questions & how to handle them
 
 **Q45. If cross-dataset accuracy stays near random, is your project a failure?**

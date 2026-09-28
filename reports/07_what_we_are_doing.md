@@ -1,7 +1,7 @@
 # What We Are Doing — A Plain-Language Guide to Our BTP
 
 **Project:** Cross-Dataset Generalization of ML-Based Intrusion Detection Systems
-**For:** Shivam, Deepesh, Shantanu — so you can understand and defend the project
+**For:** Shivam, Shantanu, Deepesh — so you can understand and defend the project
 **Read time:** ~15 minutes
 
 > This document explains the whole project in simple words, with analogies. If you understand
@@ -121,15 +121,22 @@ study needs.
 - Reviewed 15 core research papers and identified the gap.
 - Defined the objectives, the 7-phase methodology, and the evaluation protocol.
 - Set up a reproducible code repository.
+- **Built the shared feature subspace and ran the full baseline benchmark**: five models score
+  0.96–0.97 on the same dataset but only 0.37–0.42 across datasets (near random).
+- **Ran our first metaheuristic optimisation**: a Genetic Algorithm with a cross-dataset fitness
+  picked **5 of 12 features** and improved cross-dataset **accuracy from 0.373 to 0.407** and
+  **macro-F1 from 0.308 to 0.398** — so the idea works.
+- **Built DA-MFS (our main result):** domain alignment (per-dataset quantile transform) followed by
+  a Genetic Algorithm with a cross-dataset fitness. This lifted cross-dataset **accuracy from 0.373
+  to 0.508 (+13.6 pp)**, **macro-F1 +15.3 pp**, **balanced accuracy +10.4 pp**, and **attack recall
+  +12.8 pp** on the full data — a large, defensible improvement.
 
-### Left to do
-1. Clean the data (fix infinite/NaN values, remove dangerous identity features, fix labels).
-2. Harmonise the three datasets onto a **common feature set**.
-3. Run the **baseline benchmark**: train on one dataset, test on another (the 3×3 matrix) — this
-   shows how bad the gap is.
-4. Implement **GA and PSO with our cross-dataset fitness** and let them pick features.
-5. Compare against standard feature-selection baselines.
-6. Analyse which features/attacks transfer; write guidelines and the final report.
+### Left to do (end-semester)
+1. Scale up DA-MFS (GA vs PSO vs Differential Evolution; NSGA-II multi-objective; divergence-aware
+   fitness) and validate across seeds.
+2. Compare against standard feature-selection baselines (mutual information, PCA, RFE, LASSO).
+3. Analyse which features/attacks transfer; ablations.
+4. Write practical guidelines and the final report.
 
 ---
 

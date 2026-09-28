@@ -5,10 +5,10 @@ matplotlib==3.11.2
 seaborn==0.13.2
 
 # Planned implementation-phase dependencies (baselines + metaheuristics)
-# Uncomment once you begin Phase 3–5 of the methodology.
-# scikit-learn
+scikit-learn
+# Optional: gradient-boosted baseline (use with: python src/baseline_cross_dataset.py --models xgb)
+xgboost
 # imbalanced-learn
-# xgboost
 # lightgbm
 # deap        # Genetic Algorithm
 # pyswarms    # Particle Swarm Optimization
