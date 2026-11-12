@@ -4,7 +4,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
-FIG = r"F:\BTP\reports\figures"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FIG = os.path.join(ROOT, "reports", "figures")
 os.makedirs(FIG, exist_ok=True)
 plt.rcParams.update({"figure.dpi": 150, "savefig.bbox": "tight", "font.size": 9})
 

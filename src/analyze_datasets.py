@@ -3,7 +3,8 @@ import json
 import numpy as np
 import pandas as pd
 
-BASE = r"F:\BTP\datasets"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.join(ROOT, "datasets")
 
 def summarize_cicids():
     d = os.path.join(BASE, "CIC-IDS-2017", "MachineLearningCVE")
@@ -73,7 +74,7 @@ if __name__ == "__main__":
         "unsw_nb15": summarize_unsw(),
         "ton_iot": summarize_ton(),
     }
-    out_p = r"F:\BTP\src\dataset_stats.json"
+    out_p = os.path.join(ROOT, "src", "dataset_stats.json")
     with open(out_p, "w") as fh:
         json.dump(result, fh, indent=2)
     print("saved", out_p)

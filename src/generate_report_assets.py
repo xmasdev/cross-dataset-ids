@@ -6,8 +6,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-BASE = r"F:\BTP\datasets"
-FIG = r"F:\BTP\reports\figures"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.join(ROOT, "datasets")
+FIG = os.path.join(ROOT, "reports", "figures")
 os.makedirs(FIG, exist_ok=True)
 
 plt.rcParams.update({
@@ -99,7 +100,7 @@ if __name__ == "__main__":
         "ton_iot": {"total_rows": 211043, "type": ton, "feature_columns": 42,
                      "nan_cells": 0, "inf_cells": 0},
     }
-    with open(r"F:\BTP\src\dataset_stats.json", "w") as fh:
+    with open(os.path.join(ROOT, "src", "dataset_stats.json"), "w") as fh:
         json.dump(stats, fh, indent=2)
     print("charts + stats written to", FIG)
     print(json.dumps(stats, indent=2))

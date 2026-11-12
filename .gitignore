@@ -19,3 +19,6 @@ results/harmonized_*.csv
 
 # University-provided sample evaluation (contains another group's details)
 sample_midsem_eval.pdf
+
+# Run logs of the end-semester experiments
+results/v2/log_*.txt

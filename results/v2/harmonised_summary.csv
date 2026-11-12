@@ -1,0 +1,4 @@
+dataset,rows,attack_frac,n_attack_types,tcp,udp,no_reply,med_src_bpp,dur0
+CIC-IDS-2017,2830743,0.197,14,0.646,0.354,0.16,61.0,0.001
+UNSW-NB15,257673,0.6391,9,0.478,0.36,0.467,73.0,0.014
+TON_IoT,211043,0.7631,9,0.8,0.199,0.394,54.7,0.284
